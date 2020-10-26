@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Ingreso;
 use App\Persona;
 use Illuminate\Http\Request;
+use DB;
 
 class IngresoController extends Controller
 {
@@ -15,7 +16,14 @@ class IngresoController extends Controller
      */
     public function index()
     {
-        //
+        $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
+        $ingresos = DB::table('ingresos')
+            ->join('tipo_ingreso', 'ingresos.id_tipoingreso', '=', 'tipo_ingreso.id_tipoingreso')
+            ->join('tipo_salario', 'ingresos.id_tiposalario', '=', 'tipo_salario.id_tiposalario')
+            ->select('ingresos.*', 'tipo_ingreso.tipo_ingreso','tipo_salario.tipo_salario')
+            ->where('id_persona', $id_persona)
+            ->get();
+        return $ingresos;
     }
 
     /**
@@ -40,6 +48,8 @@ class IngresoController extends Controller
         if (!$request->ajax()) return redirect('/');        
         $ingreso = new Ingreso();
         $ingreso->ingreso_mensual = $request->ingreso_mensual;
+        $ingreso->descripcion_trabajo = $request->descripcion_trabajo;
+        $ingreso->lugar_trabajo = $request->lugar_trabajo;
         $ingreso->tiempo_trabajo_anios = $request->tiempo_trabajo_anios;
         $ingreso->tiempo_trabajo_meses = $request->tiempo_trabajo_meses;
         $ingreso->aporte_afp = $request->aporte_afp;
@@ -89,8 +99,9 @@ class IngresoController extends Controller
      * @param  \App\Ingreso  $ingreso
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ingreso $ingreso)
+    public function destroy(Request $request)
     {
-        //
+        $ingreso = Ingreso::findOrFail($request->id);
+        $ingreso->delete();
     }
 }

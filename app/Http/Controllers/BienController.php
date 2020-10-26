@@ -97,11 +97,20 @@ class BienController extends Controller
         else{
             $bienes=[];
             $total_bienes=0;
-        }
-        
+        }        
         $msg = $personas;
-        Mail::to('csn@sanmartin.com.bo')->send(new MessageReceived($msg,$exist_conyugue,$conyugues,$creditos,$ingresos,$exist_prestamo,$prestamos,$exist_bien,$bienes,$total_bienes
+        /*  csn@sanmartin.com.bo */
+        
+        Mail::to('jgarcia@sanmartin.com.bo')->send(new MessageReceived($msg,$exist_conyugue,$conyugues,$creditos,$ingresos,$exist_prestamo,$prestamos,$exist_bien,$bienes,$total_bienes
         ));
+    }
+
+    public function check(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
+        $existe= Bien::where('id_persona', $id_persona)->count();
+        return $existe;
     }
 
     /**

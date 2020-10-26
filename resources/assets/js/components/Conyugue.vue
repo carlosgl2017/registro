@@ -204,6 +204,56 @@
                                     </div>
                                     <!--input ends-->
 
+                                     <!--input start-->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="direccion">Dirección</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model.trim="$v.direccion.$model"
+                                            :class="{
+                                                'is-invalid': $v.direccion.$error,
+                                                'is-valid': !$v.direccion.$invalid
+                                            }"
+                                        />
+                                        <div class="valid-feedback">
+                                            Correcto!
+                                        </div>
+                                        <div class="invalid feedback">
+                                            <span
+                                                class="text-danger"
+                                                v-if="!$v.direccion.required"
+                                                >Este campo es obligatorio</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <!--input ends-->
+
+                                     <!--input start-->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="lugar_residencia">Ciudad de residencia</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model.trim="$v.lugar_residencia.$model"
+                                            :class="{
+                                                'is-invalid': $v.lugar_residencia.$error,
+                                                'is-valid': !$v.lugar_residencia$invalid
+                                            }"
+                                        />
+                                        <div class="valid-feedback">
+                                            Correcto!
+                                        </div>
+                                        <div class="invalid feedback">
+                                            <span
+                                                class="text-danger"
+                                                v-if="!$v.lugar_residencia.required"
+                                                >Este campo es obligatorio</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <!--input ends-->
+
                                     <div class="col-md-6 mb-3">
                                         <label for="text-input"
                                             >CI Expedido en</label
@@ -360,8 +410,10 @@ export default {
             ap_materno: "",
             celular: "",
             ci: "",
+            direccion: "",
+            lugar_residencia: "",
             fech_nac: "",
-            id_nacionalidad: 0,
+            id_nacionalidad: 68,
             id_extension: 0,
             id_estado_civil: 0,
             arrayNacionalidad: [],
@@ -392,9 +444,39 @@ export default {
         ci: {
             required,
             alphaNum
-        }
+        },
+        lugar_residencia: {
+            required,
+             alpha:helpers.regex('alpha',/^[a-z_\u00E0-\u00FC ]*$/i)
+        },
+        direccion: {
+            required,
+             alpha:helpers.regex('alpha',/^[a-z_\u00E0-\u00FC ]*$/i)
+        },
     },
     methods: {
+        actualizar() {
+      let me = this;
+      axios
+        .get("/conyugue")
+        .then(function (response) {
+          var res = response.data;
+          me.nombre = res.persona[0].nombre;
+          me.ap_paterno = res.persona[0].ap_paterno;
+          me.ap_materno = res.persona[0].ap_materno;
+          me.celular = res.persona[0].celular;
+          me.direccion = res.persona[0].direccion;
+          me.lugar_residencia = res.persona[0].lugar_residencia;
+          me.ci = res.persona[0].ci;
+          me.fech_nac = res.persona[0].fech_nac;
+          me.id_nacionalidad = res.persona[0].id_nacionalidad;
+          me.id_extension = res.persona[0].id_extension;
+          me.id_estado_civil = res.persona[0].id_estado_civil;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
         changeMenu() {
             this.$emit("updating-menu", 3); // 1. Emitting
         },
@@ -452,6 +534,8 @@ export default {
                     ap_materno: this.ap_materno,
                     celular: this.celular,
                     ci: this.ci,
+                    direccion: this.direccion,
+                    lugar_residencia: this.lugar_residencia,
                     fech_nac: this.fech_nac,
                     id_nacionalidad: this.id_nacionalidad,
                     id_extension: this.id_extension,
@@ -470,6 +554,8 @@ export default {
             this.ap_materno = "";
             this.celular = "";
             this.ci = "";
+            this.direccion = "";
+            this.lugar_residencia = "";
             this.fech_nac = "";
             this.id_nacionalidad = 0;
             this.id_extension = 0;
@@ -506,11 +592,20 @@ export default {
                 this.errorMostrarMsjPersona.push(
                     "El CI es obligatorio"
                 );
+                if (!this.direccion)
+                this.errorMostrarMsjPersona.push(
+                    "El campo dirección es obligatorio"
+                );
+                if (!this.lugar_residencia)
+                this.errorMostrarMsjPersona.push(
+                    "El campo Ciudad de residencia es obligatorio"
+                );
             if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
             return this.errorPersona;
         }
     },
     mounted() {
+        this.actualizar();
         this.selectNacionalidad();
         this.selectExtension();
         this.selectEstadoCivil();

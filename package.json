@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "vee-validate": "^3.3.9",
+        "vue-sweetalert2": "^3.0.8",
         "vuelidate": "^0.7.5"
     }
 }

@@ -64,7 +64,7 @@
                                                         <h2 class="steps"></h2>
                                                     </div>
                                                 </div> <br><br>
-                                                <h2 class="purple-text text-center"><strong>Ecxelente!</strong></h2> <br>
+                                                <h2 class="purple-text text-center"><strong>Excelente!</strong></h2> <br>
                                                 <div class="row justify-content-center">
                                                     <div class="col-3"> </div>
                                                 </div> <br><br>

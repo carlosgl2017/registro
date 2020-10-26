@@ -46,6 +46,7 @@ Route::group(['middleware'=>['auth']],function(){
 
       
     Route::get('/bien', 'BienController@index');
+    Route::get('/check', 'BienController@check');
     Route::post('/bien/registrar', 'BienController@store');
     Route::get('/bien/enviar', 'BienController@enviar');
     Route::put('/bien/actualizar', 'BienController@update');
@@ -66,10 +67,14 @@ Route::group(['middleware'=>['auth']],function(){
     Route::get('/ingreso', 'IngresoController@index');
     Route::post('/ingreso/registrar', 'IngresoController@store');
     Route::put('/ingreso/actualizar', 'IngresoController@update');
+    Route::delete('/ingreso/desactivar', 'IngresoController@destroy');
     
     Route::get('/credito', 'CreditoController@index');
     Route::post('/credito/registrar', 'CreditoController@store');
     Route::put('/credito/actualizar', 'CreditoController@update');
+    
+    //Calculo
+    Route::get('/calculo','CalculoController@calculo');
 
 
     Route::get('/enviar/email', 'CalificarConsumo@enviar');

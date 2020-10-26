@@ -18,9 +18,12 @@ class CreditoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if (!$request->ajax()) return redirect('/');
+        $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
+        $credito = Credito::where('id_persona',$id_persona)->get();        
+        return ['credito' => $credito];           
     }
 
     /**
@@ -41,15 +44,29 @@ class CreditoController extends Controller
      */
     public function store(Request $request)
     {
+          
         $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
+        $exist= Credito::where('id_persona', $id_persona)->count();
         if (!$request->ajax()) return redirect('/');
-        $credito = new Credito();
-        $credito->monto = $request->monto;
-        $credito->id_persona = $id_persona;
-        $credito->id_destino = $request->id_destino;
-        $credito->id_tipo_credito = $request->id_tipo_credito;
-        $credito->save();        
-       
+        if($exist==0)
+        {
+            $credito = new Credito();
+            $credito->monto = $request->monto;
+            $credito->plazo_meses = $request->plazo_meses;
+            $credito->id_persona = $id_persona;
+            $credito->id_destino = $request->id_destino;
+            $credito->id_tipo_credito = $request->id_tipo_credito;
+            $credito->save();    
+        }else{            
+            $id = Credito::where('id_persona', $id_persona)->firstOrFail()->id_credito;
+            $credito = Credito::findOrFail($id);
+            $credito->monto = $request->monto;
+            $credito->plazo_meses = $request->plazo_meses;
+            $credito->id_persona = $id_persona;
+            $credito->id_destino = $request->id_destino;
+            $credito->id_tipo_credito = $request->id_tipo_credito;
+            $credito->save(); 
+        }
     }
 
     /**

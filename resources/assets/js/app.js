@@ -11,6 +11,7 @@ window.Vue = require('vue');
 
 
 
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -29,13 +30,16 @@ Vue.component('otroingreso', require('./components/Otroingreso.vue'));
 Vue.component('otroprestamo', require('./components/Otroprestamo.vue'));
 Vue.component('prestamo', require('./components/Prestamo.vue'));
 Vue.component('bien', require('./components/Bien.vue'));
+Vue.component('process', require('./components/Process.vue'));
 Vue.component('spinner', require('./components/Spinner.vue'));
+import VueSweetalert2 from 'vue-sweetalert2';
+Vue.use(VueSweetalert2);
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
 const app = new Vue({
     el: '#app',
     data:{
-        menu:3
+        menu:4
     },
   methods: {
     reRender() {

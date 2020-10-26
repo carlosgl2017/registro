@@ -15,11 +15,13 @@ class Persona extends Model
         'ap_paterno',
         'ap_materno',
         'celular',
+        'lugar_residencia',
+        'direccion',
         'ci',
         'fech_nac',
         'id_nacionalidad',
         'id_extension',
         'id_estado_civil',
-        'id_users'
+        'id'
     ];
 }

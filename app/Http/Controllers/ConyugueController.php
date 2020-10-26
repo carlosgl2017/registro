@@ -13,9 +13,18 @@ class ConyugueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if (!$request->ajax()) return redirect('/');  
+        $id_persona=Persona::where('id',auth()->user()->id)->firstOrFail()->id_persona;
+        $exist=Conyugue::where('id_persona',$id_persona)->count();
+        if($exist>0)
+        {           
+            $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
+            $id_conyugue=Conyugue::where('id_persona',$id_persona)->firstOrFail()->conyugue;
+            $persona = Persona::where('id_persona', $id_conyugue)->get();
+            return ['persona' => $persona];
+        }
     }
 
     /**
@@ -38,27 +47,50 @@ class ConyugueController extends Controller
     {
         $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona;
         $exist= Conyugue::where('id_persona', $id_persona)->count();
-        if($exist>0) return redirect('/');
+        //if($exist>0) return redirect('/');
         if (!$request->ajax()) return redirect('/');
-        $persona = new Persona();
-        $persona->id_nacionalidad = $request->id_nacionalidad;
-        $persona->id_extension = $request->id_extension;
-        $persona->id_estado_civil = $request->id_estado_civil;
-        $persona->nombre = $request->nombre;
-        $persona->ap_paterno = $request->ap_paterno;
-        $persona->ap_materno = $request->ap_materno;
-        $persona->ci = $request->ci;
-        $persona->celular = $request->celular;
-        $persona->fech_nac = $request->fech_nac;
-        $persona->id = auth()->user()->id;
-        $persona->save();
-
-        if ($persona->save() == true) {           
-            $conyugue = new Conyugue();
-            $conyugue->conyugue = $persona->id_persona;
-            $conyugue->id_persona = $id_persona;
-            $conyugue->save();            
+        if($exist==0)
+        {
+            $persona = new Persona();
+            $persona->id_nacionalidad = $request->id_nacionalidad;
+            $persona->id_extension = $request->id_extension;
+            $persona->id_estado_civil = $request->id_estado_civil;
+            $persona->nombre = $request->nombre;
+            $persona->ap_paterno = $request->ap_paterno;
+            $persona->ap_materno = $request->ap_materno;
+            $persona->ci = $request->ci;
+            $persona->direccion = $request->direccion;
+            $persona->lugar_residencia = $request->lugar_residencia;
+            $persona->celular = $request->celular;
+            $persona->fech_nac = $request->fech_nac;
+            $persona->id = auth()->user()->id;
+            $persona->save();
+    
+            if ($persona->save() == true) {           
+                $conyugue = new Conyugue();
+                $conyugue->conyugue = $persona->id_persona;
+                $conyugue->id_persona = $id_persona;
+                $conyugue->save();            
+            }
+        }else{
+            $id_persona = Persona::where('id', auth()->user()->id)->firstOrFail()->id_persona; 
+            $id_conyugue=Conyugue::where('id_persona',$id_persona)->firstOrFail()->conyugue;         
+            $persona = Persona::findOrFail($id_conyugue);
+            $persona->id_nacionalidad = $request->id_nacionalidad;
+            $persona->id_extension = $request->id_extension;
+            $persona->id_estado_civil = $request->id_estado_civil;
+            $persona->nombre = $request->nombre;
+            $persona->ap_paterno = $request->ap_paterno;
+            $persona->ap_materno = $request->ap_materno;
+            $persona->ci = $request->ci;
+            $persona->direccion = $request->direccion;
+            $persona->lugar_residencia = $request->lugar_residencia;
+            $persona->celular = $request->celular;
+            $persona->fech_nac = $request->fech_nac;
+            $persona->id = auth()->user()->id;
+            $persona->save();
         }
+       
     }
 
     /**

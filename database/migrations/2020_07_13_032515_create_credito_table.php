@@ -16,6 +16,7 @@ class CreateCreditoTable extends Migration
         Schema::create('credito', function (Blueprint $table) {
             $table->increments('id_credito');      
             $table->double('monto');
+            $table->integer('plazo_meses');
             $table->integer('id_persona')->unsigned();
             $table->integer('id_destino')->unsigned();
             $table->integer('id_tipo_credito')->unsigned();

@@ -16,6 +16,8 @@ class CreateIngresosTable extends Migration
         Schema::create('ingresos', function (Blueprint $table) {
             $table->increments('id_ingresos');
             $table->double('ingreso_mensual');
+            $table->string('descripcion_trabajo')->nullable();
+            $table->string('lugar_trabajo')->nullable();
             $table->integer('tiempo_trabajo_meses')->nullable();
             $table->integer('tiempo_trabajo_anios')->nullable();
             $table->boolean('aporte_afp')->nullable();

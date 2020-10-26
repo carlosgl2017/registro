@@ -12,11 +12,14 @@ class Ingreso extends Model
 
     protected $fillable=[
         'ingreso_mensual',
+        'descripcion_trabajo',
+        'lugar_trabajo',
         'aporte_afp',
         'tiempo_trabajo_meses',
         'tiempo_trabajo_anios',
         'id_persona',
         'id_tipoingreso',
-        'id_tiposalario'
+        'id_tiposalario',
+        'id_ingresos'
     ];
 }
